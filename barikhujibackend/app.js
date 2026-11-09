@@ -10,7 +10,7 @@ const { verifyCsrf } = require("./middleware/csrf");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
 const { createAuthRouter } = require("./routes/auth");
 const { createLandlordRouter } = require("./routes/landlord");
-
+const { createPropertyRouter } = require("./routes/properties");
 const API_PREFIX = "/api/v1";
 
 // Builds the Express app without starting it (so tests can import it). Requires mongoose to be connected already.
@@ -43,7 +43,7 @@ const api = express.Router();
 api.use(verifyCsrf(config.frontendOrigins, config.csrfHeader));
 api.use("/auth", createAuthRouter(config));
 api.use("/landlord", createLandlordRouter());
-
+api.use("/properties", createPropertyRouter());
 app.use(API_PREFIX, api);
 
   app.use(notFound);
