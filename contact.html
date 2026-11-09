@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact Us – Barikhuji</title>
+<link rel="stylesheet" href="css/styles.css"><link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main id="main" class="section"><div class="container prose">
+<h1>Contact us</h1>
+<p>Questions, feedback or a safety concern? Send us a message and we will get back to you.</p>
+<p><small>Official support email and phone details will be added here before launch.</small></p>
+<p id="form-status" class="notice" role="status" hidden></p>
+<form id="cform" class="panel" novalidate>
+  <div class="field"><label for="name">Your name *</label><input id="name" name="name" autocomplete="name" required><span class="err" id="name-err" aria-live="polite"></span></div>
+  <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err" id="email-err" aria-live="polite"></span></div>
+  <div class="field"><label for="phone">Mobile number (optional)</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="01XXXXXXXXX" data-bdphone><span class="err" id="phone-err" aria-live="polite"></span></div>
+  <div class="field"><label for="subject">Topic *</label><select id="subject" name="subject" required><option value="">Select…</option><option>General question</option><option>Report a listing or scam</option><option>Landlord support</option><option>Technical problem</option></select><span class="err" id="subject-err" aria-live="polite"></span></div>
+  <div class="field"><label for="message">Message *</label><textarea id="message" name="message" rows="5" required minlength="10" maxlength="2000"></textarea><span class="err" id="message-err" aria-live="polite"></span></div>
+  <button class="btn" type="submit">Send message</button>
+</form>
+</div></main>
+<div id="site-footer"></div>
+<script src="js/config.js"></script>
+<script src="js/api-account.js"></script>
+<script src="js/components.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/pages/contact.js"></script>
+</body></html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Customer Login – Barikhuji</title>
+<link rel="stylesheet" href="css/styles.css"><link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main id="main" class="section"><div class="container">
+<div class="auth-card">
+  <h1>Welcome back</h1>
+  <p>Sign in to see your favorites and inquiries.</p>
+  <p id="form-status" class="notice" role="status" hidden></p>
+  <form data-auth="customer-login" data-redirect="dashboard.html" novalidate>
+    <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err" id="email-err" aria-live="polite"></span></div>
+    <div class="field"><label for="password">Password *</label><input id="password" name="password" type="password" autocomplete="current-password" required><span class="err" id="password-err" aria-live="polite"></span></div>
+    <button class="btn" type="submit">Sign in</button>
+  </form>
+  <p class="auth-alt">New to Barikhuji? <a href="register.html">Create an account</a></p>
+  <p class="auth-alt">Are you a landlord? <a href="landlord/login.html">Landlord login</a></p>
+</div></div></main>
+<div id="site-footer"></div>
+<script src="js/config.js"></script>
+<script src="js/components.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/api-account.js"></script>
+<script src="js/pages/auth.js"></script>
+</body></html>

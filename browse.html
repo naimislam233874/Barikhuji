@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Browse Rentals – Barikhuji</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main id="main" class="section"><div class="container">
+<h1>Browse rentals</h1>
+<div class="layout">
+<form class="filters" id="filters" aria-label="Filters">
+  <div class="field"><label for="location">Location</label><input id="location" name="location"></div>
+  <div class="field"><label for="minRent">Min rent (৳)</label><input id="minRent" name="minRent" type="number" min="0"></div>
+  <div class="field"><label for="maxRent">Max rent (৳)</label><input id="maxRent" name="maxRent" type="number" min="0"></div>
+  <div class="field"><label for="type">Property type</label><select id="type" name="type"><option value="">Any</option><option>Apartment</option><option>Room</option><option>Studio</option><option>Mess/Seat</option></select></div>
+  <div class="field"><label for="suitableFor">Suitable for</label><select id="suitableFor" name="suitableFor"><option value="">Anyone</option><option>Bachelor</option><option>Student</option><option>Family</option></select></div>
+  <div class="field"><label for="bedrooms">Min bedrooms</label><select id="bedrooms" name="bedrooms"><option value="">Any</option><option>1</option><option>2</option><option>3</option><option>4</option></select></div>
+  <div class="field"><label for="bathrooms">Min bathrooms</label><select id="bathrooms" name="bathrooms"><option value="">Any</option><option>1</option><option>2</option><option>3</option></select></div>
+  <div class="field"><label for="furnished">Furnished status</label><select id="furnished" name="furnished"><option value="">Any</option><option>Furnished</option><option>Semi-furnished</option><option>Unfurnished</option></select></div>
+  <div class="field"><label for="availableFrom">Available by</label><input id="availableFrom" name="availableFrom" type="date"></div>
+  <fieldset class="checks field"><legend><strong>Amenities</strong></legend>
+    <label><input type="checkbox" name="amenity" value="Lift"> Lift</label><label><input type="checkbox" name="amenity" value="Generator"> Generator</label>
+    <label><input type="checkbox" name="amenity" value="Gas"> Gas</label><label><input type="checkbox" name="amenity" value="Wi-Fi"> Wi-Fi</label>
+    <label><input type="checkbox" name="amenity" value="Parking"> Parking</label><label><input type="checkbox" name="amenity" value="Security"> Security</label></fieldset>
+  <button class="btn" type="submit">Apply filters</button>
+  <button class="btn outline" type="button" id="clear">Clear filters</button>
+</form>
+<section aria-label="Results">
+  <div class="toolbar"><p id="count" aria-live="polite"></p>
+    <div class="field" style="margin:0;flex-direction:row;align-items:center"><label for="sort">Sort by</label>
+    <select id="sort"><option value="">Relevance</option><option value="rentAsc">Rent: low to high</option><option value="rentDesc">Rent: high to low</option><option value="newest">Newest available</option></select></div></div>
+  <div class="grid" id="results"></div>
+  <nav class="pager" id="pager" aria-label="Pagination"></nav>
+</section></div></div></main>
+<div id="site-footer"></div>
+<script src="js/config.js"></script>
+<script src="js/data/sample-properties.js"></script>
+<script src="js/api.js"></script>
+<script src="js/components.js"></script>
+<script src="js/pages/browse.js"></script>
+</body></html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin Login – Barikhuji</title>
+<link rel="stylesheet" href="../css/styles.css"><link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body data-root="../">
+<div id="site-header"></div>
+<main id="main" class="section"><div class="container">
+<div class="auth-card">
+  <h1>Admin login</h1>
+  <p>Authorized staff only. Access is enforced by the server, never by this page.</p>
+  <p id="form-status" class="notice" role="status" hidden></p>
+  <form data-auth="admin-login" data-redirect="dashboard.html" novalidate>
+    <div class="field"><label for="email">Work email *</label><input id="email" name="email" type="email" autocomplete="username" required><span class="err" id="email-err" aria-live="polite"></span></div>
+    <div class="field"><label for="password">Password *</label><input id="password" name="password" type="password" autocomplete="current-password" required><span class="err" id="password-err" aria-live="polite"></span></div>
+    <button class="btn" type="submit">Sign in</button>
+  </form>
+</div></div></main>
+<div id="site-footer"></div>
+<script src="../js/config.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/validation.js"></script>
+<script src="../js/api-account.js"></script>
+<script src="../js/pages/auth.js"></script>
+</body></html>

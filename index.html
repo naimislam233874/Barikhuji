@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barikhuji – Find Rental Homes in Bangladesh</title>
+<meta name="description" content="Browse verified rental apartments, rooms and bachelor-friendly homes across Bangladesh.">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main id="main">
+<section class="hero"><div class="container">
+  <h1>Find your next home, <em>barikhuji</em> made easy</h1>
+  <p>Verified rentals across Dhaka, Chattogram, Sylhet and beyond.</p>
+  <form class="searchbar" action="browse.html" role="search" aria-label="Search rentals">
+    <div class="field"><label for="location">Location</label><input id="location" name="location" placeholder="e.g. Mirpur, Dhanmondi"></div>
+    <div class="field"><label for="minRent">Min budget (৳)</label><input id="minRent" name="minRent" type="number" min="0" step="500"></div>
+    <div class="field"><label for="maxRent">Max budget (৳)</label><input id="maxRent" name="maxRent" type="number" min="0" step="500"></div>
+    <button class="btn" type="submit">Search</button>
+  </form></div></section>
+
+<section class="section"><div class="container"><h2>Browse by category</h2>
+  <div class="grid" id="categories"></div></div></section>
+<section class="section alt"><div class="container"><h2>Featured rentals</h2><div class="grid" id="featured" aria-live="polite"></div></div></section>
+<section class="section"><div class="container"><h2>Popular locations</h2><div class="grid" id="locations"></div></div></section>
+<section class="section alt"><div class="container"><h2>Bachelor-friendly properties</h2><div class="grid" id="bachelor"></div></div></section>
+<section class="section"><div class="container"><h2>Verified listings</h2>
+  <p>Every ✓ Verified badge means our team has checked the landlord's identity and the property's details.</p>
+  <a class="btn outline" href="browse.html">See all listings</a></div></section>
+<section class="section alt"><div class="container"><h2>How it works</h2>
+  <div class="grid"><div class="tile">1. Search by location &amp; budget</div><div class="tile">2. Compare photos and details</div><div class="tile">3. Contact the landlord &amp; visit</div></div></div></section>
+<section class="section"><div class="container"><h2>Safety tips</h2>
+  <ul><li>Visit the property in person before paying anything.</li><li>Never send advance money to someone you haven't met.</li><li>Ask for a written rental agreement and verify ownership.</li></ul>
+  <a href="safety.html">Read full safety guidelines</a></div></section>
+<section class="section alt"><div class="container"><h2>FAQs</h2>
+  <details><summary>Is Barikhuji free for renters?</summary><p>Browsing and contacting landlords is free.</p></details>
+  <details><summary>What does Verified mean?</summary><p>The landlord and listing passed our manual checks.</p></details>
+  <details><summary>Can bachelors rent here?</summary><p>Yes. Use the Bachelor filter to see properties that allow bachelors.</p></details></div></section>
+</main>
+<div id="site-footer"></div>
+<script src="js/config.js"></script>
+<script src="js/data/sample-properties.js"></script>
+<script src="js/api.js"></script>
+<script src="js/components.js"></script>
+<script src="js/pages/home.js"></script>
+</body></html>

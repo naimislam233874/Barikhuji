@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Add / Edit Property – Barikhuji</title>
+<link rel="stylesheet" href="../css/styles.css"><link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body data-root="../">
+<div id="site-header"></div>
+<main id="main" class="section"><div class="container">
+<p><a href="dashboard.html#listings">← Back to my listings</a></p>
+<h1 id="form-title">Add a property</h1>
+<p class="notice" id="preview-note" role="status" hidden></p>
+<p id="form-status" class="notice" role="status" hidden></p>
+<form id="pform" class="form-grid panel" novalidate>
+  <div class="field span"><label for="title">Listing title *</label><input id="title" name="title" required minlength="10" maxlength="100"><span class="err" id="title-err" aria-live="polite"></span></div>
+  <div class="field"><label for="type">Property type *</label><select id="type" name="type" required><option value="">Select…</option><option>Apartment</option><option>Room</option><option>Studio</option><option>Mess/Seat</option></select><span class="err" id="type-err" aria-live="polite"></span></div>
+  <div class="field"><label for="furnished">Furnished status *</label><select id="furnished" name="furnished" required><option value="">Select…</option><option>Furnished</option><option>Semi-furnished</option><option>Unfurnished</option></select><span class="err" id="furnished-err" aria-live="polite"></span></div>
+  <div class="field"><label for="city">City *</label><select id="city" name="city" required><option value="">Select…</option><option>Dhaka</option><option>Chattogram</option><option>Sylhet</option><option>Rajshahi</option><option>Khulna</option><option>Barishal</option><option>Rangpur</option><option>Mymensingh</option></select><span class="err" id="city-err" aria-live="polite"></span></div>
+  <div class="field"><label for="area">Area / neighbourhood *</label><input id="area" name="area" required placeholder="e.g. Dhanmondi"><span class="err" id="area-err" aria-live="polite"></span></div>
+  <div class="field"><label for="rent">Monthly rent (৳) *</label><input id="rent" name="rent" type="number" min="1" step="100" required><span class="err" id="rent-err" aria-live="polite"></span></div>
+  <div class="field"><label for="deposit">Security deposit (৳) *</label><input id="deposit" name="deposit" type="number" min="0" step="100" required><span class="err" id="deposit-err" aria-live="polite"></span></div>
+  <div class="field"><label for="bedrooms">Bedrooms *</label><input id="bedrooms" name="bedrooms" type="number" min="1" max="10" required><span class="err" id="bedrooms-err" aria-live="polite"></span></div>
+  <div class="field"><label for="bathrooms">Bathrooms *</label><input id="bathrooms" name="bathrooms" type="number" min="1" max="10" required><span class="err" id="bathrooms-err" aria-live="polite"></span></div>
+  <div class="field"><label for="availableFrom">Available from *</label><input id="availableFrom" name="availableFrom" type="date" required><span class="err" id="availableFrom-err" aria-live="polite"></span></div>
+  <fieldset class="field"><legend>Suitable for *</legend>
+    <div class="check-row"><label><input type="checkbox" name="suitableFor" value="Bachelor"> Bachelor</label><label><input type="checkbox" name="suitableFor" value="Student"> Student</label><label><input type="checkbox" name="suitableFor" value="Family"> Family</label></div>
+    <span class="err" id="suitableFor-err" aria-live="polite"></span></fieldset>
+  <fieldset class="field span"><legend>Amenities</legend>
+    <div class="check-row"><label><input type="checkbox" name="amenities" value="Lift"> Lift</label><label><input type="checkbox" name="amenities" value="Generator"> Generator</label><label><input type="checkbox" name="amenities" value="Gas"> Gas</label><label><input type="checkbox" name="amenities" value="Wi-Fi"> Wi-Fi</label><label><input type="checkbox" name="amenities" value="Parking"> Parking</label><label><input type="checkbox" name="amenities" value="Security"> Security</label><label><input type="checkbox" name="amenities" value="CCTV"> CCTV</label></div></fieldset>
+  <div class="field span"><label for="description">Description *</label><textarea id="description" name="description" rows="5" required minlength="30" maxlength="2000"></textarea><span class="err" id="description-err" aria-live="polite"></span></div>
+  <div class="field span"><label for="images">Photos * (JPG, PNG or WebP, up to 8 photos, 5 MB each)</label><input id="images" name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple required><span class="err" id="images-err" aria-live="polite"></span></div>
+  <div class="span"><button class="btn" type="submit">Submit listing for review</button></div>
+</form>
+</div></main>
+<div id="site-footer"></div>
+<script src="../js/config.js"></script>
+<script src="../js/data/sample-properties.js"></script>
+<script src="../js/api.js"></script>
+<script src="../js/api-account.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/validation.js"></script>
+<script src="../js/pages/property-form.js"></script>
+</body></html>

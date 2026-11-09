@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create Customer Account – Barikhuji</title>
+<link rel="stylesheet" href="css/styles.css"><link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+<div id="site-header"></div>
+<main id="main" class="section"><div class="container">
+<div class="auth-card">
+  <h1>Create your account</h1>
+  <p>Save favorites and contact landlords faster.</p>
+  <p id="form-status" class="notice" role="status" hidden></p>
+  <form data-auth="customer-register" data-redirect="login.html" novalidate>
+    <div class="field"><label for="fullName">Full name *</label><input id="fullName" name="fullName" autocomplete="name" required minlength="3"><span class="err" id="fullName-err" aria-live="polite"></span></div>
+    <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err" id="email-err" aria-live="polite"></span></div>
+    <div class="field"><label for="phone">Mobile number *</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="01XXXXXXXXX" required data-bdphone><span class="err" id="phone-err" aria-live="polite"></span></div>
+    <div class="field"><label for="password">Password * (min 8 characters)</label><input id="password" name="password" type="password" autocomplete="new-password" required minlength="8"><span class="err" id="password-err" aria-live="polite"></span></div>
+    <div class="field"><label for="confirmPassword">Confirm password *</label><input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required><span class="err" id="confirmPassword-err" aria-live="polite"></span></div>
+    <div class="field"><label style="font-weight:400"><input id="terms" name="terms" type="checkbox"> I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a></label><span class="err" id="terms-err" aria-live="polite"></span></div>
+    <button class="btn" type="submit">Create account</button>
+  </form>
+  <p class="auth-alt">Already registered? <a href="login.html">Sign in</a></p>
+  <p class="auth-alt">Want to list a property? <a href="landlord/register.html">Register as a landlord</a></p>
+</div></div></main>
+<div id="site-footer"></div>
+<script src="js/config.js"></script>
+<script src="js/components.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/api-account.js"></script>
+<script src="js/pages/auth.js"></script>
+</body></html>

@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Uploaded files and logs
+uploads/
+**/uploads/
+*.log
+
+# Test and build output
+coverage/
+dist/
+build/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# Unwanted local files
+/barikhujibackend/barikhuji-landlord-properties (1)/
+/js/Downloads - Shortcut.lnk

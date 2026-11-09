@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>My Dashboard – Barikhuji</title>
+<link rel="stylesheet" href="css/styles.css"><link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-login="login.html">
+<div id="site-header"></div>
+<main id="main" class="section"><div class="container">
+<h1>My dashboard</h1>
+<p class="notice" id="preview-note" role="status" hidden></p>
+<div class="dash">
+  <div class="side">
+    <div role="tablist" aria-orientation="vertical" aria-label="Dashboard sections">
+      <button type="button" role="tab" id="tab-overview" data-tab="overview" aria-controls="panel-overview">Overview</button>
+      <button type="button" role="tab" id="tab-favorites" data-tab="favorites" aria-controls="panel-favorites">Favorites</button>
+      <button type="button" role="tab" id="tab-inquiries" data-tab="inquiries" aria-controls="panel-inquiries">Inquiry history</button>
+    </div>
+    <button type="button" class="btn outline sm" id="signout">Sign out</button>
+  </div>
+  <div>
+    <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">
+      <div class="stats">
+        <div class="stat"><strong id="stat-favs">–</strong><span>Saved favorites</span></div>
+        <div class="stat"><strong id="stat-inqs">–</strong><span>Inquiries sent</span></div>
+      </div>
+      <a class="btn" href="browse.html">Find more rentals</a>
+    </section>
+    <section role="tabpanel" id="panel-favorites" aria-labelledby="tab-favorites" hidden>
+      <h2>Favorites</h2>
+      <div class="grid" id="fav-grid" aria-live="polite"></div>
+    </section>
+    <section role="tabpanel" id="panel-inquiries" aria-labelledby="tab-inquiries" hidden>
+      <h2>Inquiry history</h2>
+      <div id="inq-box" aria-live="polite"></div>
+    </section>
+  </div>
+</div></div></main>
+<div id="site-footer"></div>
+<script src="js/config.js"></script>
+<script src="js/data/sample-properties.js"></script>
+<script src="js/data/sample-account.js"></script>
+<script src="js/api.js"></script>
+<script src="js/api-account.js"></script>
+<script src="js/components.js"></script>
+<script src="js/dash-common.js"></script>
+<script src="js/pages/dashboard.js"></script>
+</body></html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Landlord Dashboard – Barikhuji</title>
+<link rel="stylesheet" href="../css/styles.css"><link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body data-root="../" data-login="login.html">
+<div id="site-header"></div>
+<main id="main" class="section"><div class="container">
+<h1>Landlord dashboard</h1>
+<p class="notice" id="preview-note" role="status" hidden></p>
+<div class="dash">
+  <div class="side">
+    <div role="tablist" aria-orientation="vertical" aria-label="Dashboard sections">
+      <button type="button" role="tab" id="tab-overview" data-tab="overview" aria-controls="panel-overview">Overview</button>
+      <button type="button" role="tab" id="tab-listings" data-tab="listings" aria-controls="panel-listings">My listings</button>
+      <button type="button" role="tab" id="tab-inquiries" data-tab="inquiries" aria-controls="panel-inquiries">Inquiries</button>
+    </div>
+    <a class="btn sm" href="property-form.html" style="display:block;text-align:center;margin-top:.6rem">+ Add property</a>
+    <button type="button" class="btn outline sm" id="signout">Sign out</button>
+  </div>
+  <div>
+    <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">
+      <div class="stats" id="stats" aria-live="polite"></div>
+    </section>
+    <section role="tabpanel" id="panel-listings" aria-labelledby="tab-listings" hidden>
+      <div class="toolbar"><h2 style="margin:0">My listings</h2><a class="btn sm" href="property-form.html">+ Add property</a></div>
+      <div id="listing-box" aria-live="polite"></div>
+    </section>
+    <section role="tabpanel" id="panel-inquiries" aria-labelledby="tab-inquiries" hidden>
+      <h2>Recent inquiries</h2>
+      <div id="inq-box" aria-live="polite"></div>
+    </section>
+  </div>
+</div></div></main>
+<div id="site-footer"></div>
+<script src="../js/config.js"></script>
+<script src="../js/data/sample-properties.js"></script>
+<script src="../js/data/sample-account.js"></script>
+<script src="../js/api-account.js"></script>
+<script src="../js/components.js"></script>
+<script src="../js/dash-common.js"></script>
+<script src="../js/pages/landlord-dashboard.js"></script>
+</body></html>
