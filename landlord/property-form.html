@@ -30,13 +30,14 @@
   <fieldset class="field span"><legend>Amenities</legend>
     <div class="check-row"><label><input type="checkbox" name="amenities" value="Lift"> Lift</label><label><input type="checkbox" name="amenities" value="Generator"> Generator</label><label><input type="checkbox" name="amenities" value="Gas"> Gas</label><label><input type="checkbox" name="amenities" value="Wi-Fi"> Wi-Fi</label><label><input type="checkbox" name="amenities" value="Parking"> Parking</label><label><input type="checkbox" name="amenities" value="Security"> Security</label><label><input type="checkbox" name="amenities" value="CCTV"> CCTV</label></div></fieldset>
   <div class="field span"><label for="description">Description *</label><textarea id="description" name="description" rows="5" required minlength="30" maxlength="2000"></textarea><span class="err" id="description-err" aria-live="polite"></span></div>
-  <div class="field span"><label for="images">Photos * (JPG, PNG or WebP, up to 8 photos, 5 MB each)</label><input id="images" name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple required><span class="err" id="images-err" aria-live="polite"></span></div>
+  <div class="field span"><label for="images">Photos * (JPG, PNG or WebP, up to 10 photos, 5 MB each)</label><input id="images" name="images" type="file" accept="image/jpeg,image/png,image/webp" multiple required><small id="image-count" style="color:var(--mu)"></small><div id="image-preview" class="bk-img-grid" aria-live="polite"></div><span class="err" id="images-err" aria-live="polite"></span></div>
   <div class="span"><button class="btn" type="submit">Submit listing for review</button></div>
 </form>
 </div></main>
 <div id="site-footer"></div>
 <script src="../js/config.js"></script>
 <script src="../js/data/sample-properties.js"></script>
+<script src="../js/http.js"></script>
 <script src="../js/api.js"></script>
 <script src="../js/api-account.js"></script>
 <script src="../js/components.js"></script>

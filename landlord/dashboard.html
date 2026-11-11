@@ -16,6 +16,8 @@
     <div role="tablist" aria-orientation="vertical" aria-label="Dashboard sections">
       <button type="button" role="tab" id="tab-overview" data-tab="overview" aria-controls="panel-overview">Overview</button>
       <button type="button" role="tab" id="tab-listings" data-tab="listings" aria-controls="panel-listings">My listings</button>
+      <button type="button" role="tab" id="tab-bookings" data-tab="bookings" aria-controls="panel-bookings">Booking requests <span class="badge" id="nav-bookings" hidden>0</span></button>
+      <button type="button" role="tab" id="tab-messages" data-tab="messages" aria-controls="panel-messages">Messages <span class="badge ok" id="nav-unread" hidden>0</span></button>
       <button type="button" role="tab" id="tab-inquiries" data-tab="inquiries" aria-controls="panel-inquiries">Inquiries</button>
     </div>
     <a class="btn sm" href="property-form.html" style="display:block;text-align:center;margin-top:.6rem">+ Add property</a>
@@ -29,6 +31,14 @@
       <div class="toolbar"><h2 style="margin:0">My listings</h2><a class="btn sm" href="property-form.html">+ Add property</a></div>
       <div id="listing-box" aria-live="polite"></div>
     </section>
+    <section role="tabpanel" id="panel-bookings" aria-labelledby="tab-bookings" hidden>
+      <h2>Booking requests</h2>
+      <div id="booking-box" aria-live="polite"></div>
+    </section>
+    <section role="tabpanel" id="panel-messages" aria-labelledby="tab-messages" hidden>
+      <h2>Messages</h2>
+      <div id="chat-box" aria-live="polite"></div>
+    </section>
     <section role="tabpanel" id="panel-inquiries" aria-labelledby="tab-inquiries" hidden>
       <h2>Recent inquiries</h2>
       <div id="inq-box" aria-live="polite"></div>
@@ -39,8 +49,11 @@
 <script src="../js/config.js"></script>
 <script src="../js/data/sample-properties.js"></script>
 <script src="../js/data/sample-account.js"></script>
+<script src="../js/http.js"></script>
 <script src="../js/api-account.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/dash-common.js"></script>
+<script src="../js/chat-widget.js"></script>
 <script src="../js/pages/landlord-dashboard.js"></script>
-</body></html>
+</body>
+</html>

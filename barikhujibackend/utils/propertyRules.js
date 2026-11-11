@@ -36,6 +36,7 @@ function checkLandlordStatusChange(currentStatus, requestedStatus) {
   if (!LANDLORD_SETTABLE_STATUSES.includes(requestedStatus)) return { ok: false, message: 'Status must be "active" or "paused".' };
   if (currentStatus === "pending_review") return { ok: false, message: "This listing is waiting for admin review. You can pause or activate it after it is approved." };
   if (currentStatus === "rejected") return { ok: false, message: "This listing was rejected. Edit it to resubmit it for review." };
+  if (currentStatus === "booked") return { ok: false, message: "This listing has a confirmed booking and cannot be changed manually." };
   if (!LANDLORD_SETTABLE_STATUSES.includes(currentStatus)) return { ok: false, message: "This listing's status cannot be changed." };
   return { ok: true, noop: currentStatus === requestedStatus };
 }

@@ -96,11 +96,11 @@ describe("property input: validation rules", () => {
     assert.equal(err({ availableFrom: today }, "availableFrom"), undefined);
     assert.equal(isRealDate("2028-02-29"), true); assert.equal(isRealDate("2027-02-29"), false);
   });
-  test("photos: https URLs or /uploads/ paths only, max 8", () => {
+  test("photos: https URLs or /uploads/ paths only, max 10", () => {
     for (const u of ["http://x.com/a.jpg", "javascript:alert(1)", "data:image/png;base64,AAAA", "//cdn.example.com/a.jpg", "file:///etc/passwd", "/uploads/../secret.png", "/uploads//a.png", "/etc/passwd", "https://", "https://x.com/a b.jpg", ""]) assert.equal(isAllowedImage(u), false, u);
     for (const u of ["https://images.unsplash.com/photo-1?w=1000", "/uploads/2026/a-b_c.jpg"]) assert.equal(isAllowedImage(u), true, u);
-    assert.ok(err({ images: Array.from({ length: 9 }, (_, i) => `https://x.com/${i}.jpg`) }, "images"));
-    assert.equal(err({ images: Array.from({ length: 8 }, (_, i) => `https://x.com/${i}.jpg`) }, "images"), undefined);
+    assert.ok(err({ images: Array.from({ length: 11 }, (_, i) => `https://x.com/${i}.jpg`) }, "images"));
+    assert.equal(err({ images: Array.from({ length: 10 }, (_, i) => `https://x.com/${i}.jpg`) }, "images"), undefined);
     assert.ok(err({ images: "https://x.com/a.jpg" }, "images"));
   });
 });

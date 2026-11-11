@@ -37,7 +37,26 @@ function createPropertyController(PropertyModel) {
     res.json(toPublicProperty(doc));
   });
 
-  return { list, get };
+  // GET /properties/:id/contact -> landlord phone/contact for an ACTIVE listing, authenticated users only.
+  const contact = asyncHandler(async (req, res) => {
+    const id = String(req.params.id);
+    const notFound = () => res.status(404).json({ message: "Property not found." });
+    if (!OBJECT_ID.test(id)) return notFound();
+
+    const doc = await Property.findOne({ _id: id, status: "active" })
+      .select("landlord status")
+      .populate("landlord", "name phone status")
+      .lean();
+    if (!doc || !doc.landlord) return notFound();
+
+    res.json({
+      landlordName: doc.landlord.name || "Landlord",
+      phone: doc.landlord.phone || "",
+      verified: doc.landlord.status === "active"
+    });
+  });
+
+  return { list, get, contact };
 }
 
 module.exports = createPropertyController;

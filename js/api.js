@@ -83,12 +83,31 @@ window.BK_API = (() => {
   }
 
   // ---------- demo filtering (temporary; goes away with js/data/) ----------
+  // Flexible location matching, kept consistent with the backend's utils/locationMatch.js:
+  // lowercase, collapsed spaces, common abbreviations expanded, substring (prefix + sub-area)
+  // matching over area + city + address. Single-character tokens are dropped so "Gulshan 1"
+  // still finds "Gulshan 2", and weak similarity ("Bad" vs "Dhaka") never matches.
+  const ABBREVIATIONS = [[/\br\/a\b/g, "residential area"], [/\bblk\b/g, "block"], [/\bsec[\b.]?(\d)/g, "sector $1"], [/\brd\b/g, "road"]];
+  function normalizeText(v) {
+    let s = String(v ?? "").toLowerCase().replace(/\s+/g, " ").trim();
+    for (const [rx, expansion] of ABBREVIATIONS) s = s.replace(rx, expansion);
+    return s;
+  }
+  function locationTokens(q) {
+    return normalizeText(q).split(" ").filter(t => t.length > 1);
+  }
+  function matchesLocation(p, toks) {
+    if (!toks.length) return true;
+    const hay = normalizeText([p.area, p.city, p.address].filter(Boolean).join(" "));
+    return toks.every(t => hay.includes(t));
+  }
+
   function demoQuery(q) {
     if (!Array.isArray(window.BK_SAMPLE)) throw new Error("Demo data is missing. Check that js/data/sample-properties.js loads before js/api.js.");
     let l = window.BK_SAMPLE.map(normalizeProperty).filter(Boolean);
 
-    const loc = text(q.location).toLowerCase();
-    if (loc) l = l.filter(p => (p.area + " " + p.city).toLowerCase().includes(loc));
+    const locToks = locationTokens(text(q.location));
+    if (locToks.length) l = l.filter(p => matchesLocation(p, locToks));
 
     const min = numOrNull(q.minRent), max = numOrNull(q.maxRent);
     if (min !== null) l = l.filter(p => p.rent >= min);
@@ -153,5 +172,37 @@ window.BK_API = (() => {
     return { saved: true };
   }
 
-  return { getProperties, getProperty, sendInquiry, normalizeProperty };
+  // Location autocomplete. Returns [{ name }] ranked exact -> prefix -> substring, derived
+  // from the listings themselves (demo: window.BK_SAMPLE; backend: GET /locations?q=...).
+  async function getLocationSuggestions(q, opts = {}) {
+    const query = text(q);
+    if (!query) return [];
+    if (C.USE_SAMPLE_DATA) {
+      if (!Array.isArray(window.BK_SAMPLE)) throw new Error("Demo data is missing. Check that js/data/sample-properties.js loads before js/api.js.");
+      const counts = new Map();
+      for (const p of window.BK_SAMPLE) {
+        for (const name of [p.area, p.city]) {
+          if (name) counts.set(name, (counts.get(name) || 0) + 1);
+        }
+      }
+      const toks = locationTokens(query);
+      return [...counts.entries()]
+        .filter(([name]) => toks.length && toks.every(t => normalizeText(name).includes(t)))
+        .sort((a, b) => rankName(a[0], query) - rankName(b[0], query) || b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 8)
+        .map(([name]) => ({ name }));
+    }
+    const data = await request("/locations", { query: { q: query }, signal: opts.signal });
+    return asArray(data && data.items).filter(s => s && s.name).map(s => ({ name: s.name }));
+  }
+
+  // Same ranking as the backend's rankSuggestion: exact 0, prefix 1, substring 2.
+  function rankName(name, query) {
+    const n = normalizeText(name), q = normalizeText(query);
+    if (n === q) return 0;
+    if (n.startsWith(q)) return 1;
+    return 2;
+  }
+
+  return { getProperties, getProperty, sendInquiry, getLocationSuggestions, normalizeProperty };
 })();

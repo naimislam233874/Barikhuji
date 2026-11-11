@@ -10,6 +10,7 @@
 //   * Search text is escaped before it becomes a regular expression, so ".*" or "(a+)+$" are plain text.
 const C = require("./propertyConstants");
 const { isRealDate } = require("./propertyInput");
+const { parseLocationQuery } = require("./locationMatch");
 
 const DEFAULT_LIMIT = 12, MAX_LIMIT = 50, MAX_PAGE = 500;
 const DEFAULT_SORT = Object.freeze({ featured: -1, createdAt: -1, _id: -1 });
@@ -37,13 +38,19 @@ function parsePropertyQuery(query) {
     return t === "" ? undefined : t;
   };
 
-  // location: every word must appear in the area or the city (so "Dhanmondi", "dhaka" and "Mirpur, Dhaka" all work).
+  // location: flexible matching over area, city and address (see utils/locationMatch.js).
+  // Every meaningful word must appear somewhere in those fields, so "Mirpur, Dhaka" needs
+  // both words, "Bad" matches "Badda" (prefix), and "Gulshan" matches "Gulshan 2".
+  // Single characters are dropped ("Gulshan 1" still finds "Gulshan 2" through "gulshan"),
+  // and regex text is escaped, so ".*" or "(a+)+$" are plain text.
   const location = single("location");
   if (location !== undefined) {
-    const tokens = location.split(/[\s,]+/).filter(Boolean);
-    if (/[\u0000-\u001f\u007f]/.test(location)) errors.location = "Location contains unsupported characters.";
-    else if (location.length > 100 || tokens.length > 5 || tokens.some(t => t.length > 50)) errors.location = "Location is too long.";
-    else filter.$and = tokens.map(t => { const rx = new RegExp(escapeRegex(t), "i"); return { $or: [{ area: rx }, { city: rx }] }; });
+    const { tokens: locTokens, error } = parseLocationQuery(location);
+    if (error) errors.location = error;
+    else if (locTokens.length) {
+      const parts = locTokens.map(t => { const rx = new RegExp(escapeRegex(t), "i"); return { $or: [{ area: rx }, { city: rx }, { address: rx }] }; });
+      filter.$and = parts;
+    }
   }
 
   const whole = (key, label, max) => {

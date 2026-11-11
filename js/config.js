@@ -3,7 +3,7 @@
 // MODE: "demo"    -> uses the temporary sample data (js/data/*). No backend needed.
 //       "backend" -> calls the real API at API_BASE. Failures show errors; they never fall back to demo data.
 (() => {
-  const MODE = "demo"; // change to "backend" once the Phase 2 server is running
+  const MODE = "backend";; // change to "backend" once the Phase 2 server is running
 
   const cfg = {
     MODE,
@@ -18,7 +18,7 @@
     // Optional settings. The API client has safe defaults if you remove them.
     REQUEST_TIMEOUT_MS: 15000,
     ASSET_BASE: "",            // prefix for relative image URLs returned by the API
-    CSRF_PATH: null,           // e.g. "/auth/csrf"; null disables the CSRF header
+    CSRF_PATH: "/auth/csrf",         // e.g. "/auth/csrf"; null disables the CSRF header
     CSRF_HEADER: "X-CSRF-Token"
   };
 
@@ -27,6 +27,10 @@
   }
 
   cfg.API_BASE = String(cfg.API_BASE).replace(/\/+$/, "");
+  if (!cfg.USE_SAMPLE_DATA && !cfg.ASSET_BASE) {
+    try { cfg.ASSET_BASE = new URL(cfg.API_BASE).origin; } catch (_) {}
+  }
+  cfg.SOCKET_BASE = cfg.ASSET_BASE || "";
 
   // Session cookies are not sent between different hosts such as 127.0.0.1 and localhost,
   // so warn early instead of leaving a silent login failure.

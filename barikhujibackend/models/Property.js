@@ -59,6 +59,7 @@ const propertySchema = new mongoose.Schema({
   submittedAt: { type: Date, default: Date.now },
   reviewedAt: Date,
   reviewedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  bookedAt: Date,
 
   // Admin-controlled flags (frontend fields). Not writable through the landlord API. Approving a listing never touches the landlord's User record.
   verified: { type: Boolean, default: false },

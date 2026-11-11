@@ -45,7 +45,8 @@ describe("Property model (no database needed)", { skip: mongoose ? false : "mong
     assert.ok(make({ suitableFor: [] }).validateSync().errors.suitableFor);
     assert.ok(make({ images: ["http://insecure.example/a.jpg"] }).validateSync());
     assert.ok(make({ images: ["javascript:alert(1)"] }).validateSync());
-    assert.ok(make({ images: Array.from({ length: 9 }, (_, i) => `https://x.com/${i}.jpg`) }).validateSync());
+    assert.ok(make({ images: Array.from({ length: 11 }, (_, i) => `https://x.com/${i}.jpg`) }).validateSync());
+    assert.equal(make({ images: Array.from({ length: 10 }, (_, i) => `https://x.com/${i}.jpg`) }).validateSync(), undefined);
     assert.equal(make({ images: ["https://x.com/a.jpg", "/uploads/a.jpg"] }).validateSync(), undefined);
   });
   test("availableFrom must look like YYYY-MM-DD", () => assert.ok(make({ availableFrom: "01/11/2026" }).validateSync().errors.availableFrom));

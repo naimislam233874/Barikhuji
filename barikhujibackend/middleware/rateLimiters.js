@@ -20,7 +20,9 @@ function createRateLimiters(config) {
     loginEmail: make({
       windowMs, max: loginEmailMax, skipSuccessfulRequests: true,
       keyGenerator: req => "email:" + (typeof req.body.email === "string" ? req.body.email.toLowerCase() : "none")
-    })
+    }),
+    // Inquiry submissions: per customer account, so one spammer cannot flood landlords.
+    inquiries: make({ windowMs: 60 * 60 * 1000, max: 30 })
   };
 }
 

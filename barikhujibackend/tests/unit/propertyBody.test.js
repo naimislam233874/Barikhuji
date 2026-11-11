@@ -1,7 +1,7 @@
 "use strict";
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
-const { requireJson, parseListingBody, parseStatusBody } = require("../../middleware/propertyBody");
+const { requireJson, parseListingBody, parseListingRequest, parseStatusBody } = require("../../middleware/propertyBody");
 
 const run = (mw, req) => new Promise(resolve => {
   const res = { statusCode: 200, status(c) { this.statusCode = c; return this; }, json(b) { resolve({ passed: false, status: this.statusCode, body: b }); } };
@@ -9,9 +9,13 @@ const run = (mw, req) => new Promise(resolve => {
 });
 const ok = { title: "Sunny 2-Bed Flat near Dhanmondi Lake", description: "Bright, airy flat on the 4th floor with a balcony.", type: "Apartment", furnished: "Furnished", city: "Dhaka", area: "Dhanmondi", rent: 28000, deposit: 56000, bedrooms: 2, bathrooms: 2, availableFrom: new Date().toISOString().slice(0, 10), suitableFor: ["Family"] };
 
-test("requireJson: multipart uploads get a clear 415 (the current frontend form sends multipart)", async () => {
+test("requireJson: non-JSON requests get 415", async () => {
   const r = await run(requireJson, { headers: { "content-type": "multipart/form-data; boundary=abc" } });
   assert.equal(r.status, 415); assert.match(r.body.message, /JSON/);
+});
+test("parseListingRequest: text/plain gets 415, JSON passes", async () => {
+  assert.equal((await run(parseListingRequest, { headers: { "content-type": "text/plain" }, body: ok })).status, 415);
+  assert.equal((await run(parseListingRequest, { headers: { "content-type": "application/json" }, body: ok })).passed, true);
 });
 test("requireJson: JSON and bodiless requests pass", async () => {
   assert.equal((await run(requireJson, { headers: { "content-type": "application/json; charset=utf-8" } })).passed, true);

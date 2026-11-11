@@ -6,7 +6,7 @@
 //
 // Endpoints used by this file (unchanged from the original):
 //   POST /auth/{customer|landlord}/{login|register}   POST /auth/admin/login   POST /auth/logout
-//   GET /me/favorites   DELETE /me/favorites/:id   GET /me/inquiries
+//   GET /me/favorites   POST /me/favorites/:propertyId   DELETE /me/favorites/:id   GET /me/inquiries
 //   GET /landlord/stats  GET /landlord/properties  GET /landlord/inquiries
 //   POST /landlord/properties (multipart)  PUT /landlord/properties/:id (multipart)
 //   PATCH /landlord/properties/:id/status {status}   DELETE /landlord/properties/:id
@@ -31,10 +31,13 @@ window.BK_ACCOUNT_API = (() => {
   const dateOnly = v => (v ? String(v).slice(0, 10) : "");
   const humanize = v => { const s = String(v ?? "").replace(/_/g, " ").trim(); return s ? s[0].toUpperCase() + s.slice(1) : "Unknown"; };
   const key = v => String(v ?? "").toLowerCase().trim().replace(/[\s-]+/g, "_"); // "Pending review" -> "pending_review"
-  const LISTING_STATUS = { active: "Active", paused: "Paused", pending_review: "Pending review", rejected: "Rejected" };
+  const LISTING_STATUS = { active: "Active", paused: "Paused", pending_review: "Pending review", rejected: "Rejected", booked: "Booked" };
   const INQUIRY_STATUS = { pending: "Pending", replied: "Replied", closed: "Closed" };
+  const BOOKING_STATUS = { pending: "Pending", confirmed: "Confirmed", rejected: "Rejected", cancelled: "Cancelled" };
   const listingLabel = v => LISTING_STATUS[key(v)] || humanize(v);
   const inquiryLabel = v => INQUIRY_STATUS[key(v)] || humanize(v);
+  const bookingLabel = v => BOOKING_STATUS[key(v)] || humanize(v);
+  const imgUrl = u => (!u ? "" : /^(https?:|data:)/.test(u) ? u : (C.ASSET_BASE || "") + u);
   const normProp = p => (window.BK_API && window.BK_API.normalizeProperty ? window.BK_API.normalizeProperty(p) : p);
 
   function sample() {
@@ -112,6 +115,11 @@ window.BK_ACCOUNT_API = (() => {
     await req(`/me/favorites/${encodeURIComponent(id)}`, { method: "DELETE" });
     return { saved: true };
   }
+  async function addFavorite(id) { // id: property id (number in demo, ObjectId string from the API)
+    if (demo()) return { saved: false };
+    await req(`/me/favorites/${encodeURIComponent(id)}`, { method: "POST" });
+    return { saved: true };
+  }
   async function getInquiries() {
     const raw = demo() ? sample().inquiries : listOf(await req("/me/inquiries"));
     return asArray(raw).map(i => ({
@@ -137,6 +145,18 @@ window.BK_ACCOUNT_API = (() => {
   }
   // formData is multipart: "suitableFor" and "amenities" repeat as keys, photo files go under "images".
   // Some frameworks (PHP/Laravel) do not parse multipart on PUT. If yours does not, change the edit call to POST with a method override.
+  async function getLandlordProperty(id) {
+    if (demo()) return normProp(window.BK_SAMPLE && window.BK_SAMPLE.find(p => String(p.id) === String(id)));
+    const p = await req(`/landlord/properties/${encodeURIComponent(id)}`);
+    if (!p) return null;
+    return {
+      ...p,
+      images: asArray(p.images),
+      suitableFor: asArray(p.suitableFor),
+      amenities: asArray(p.amenities),
+      availableFrom: dateOnly(p.availableFrom)
+    };
+  }
   async function saveListing(formData, id) {
     if (!(formData instanceof FormData)) throw new Error("saveListing expects FormData.");
     if (demo()) return { saved: false };
@@ -156,6 +176,89 @@ window.BK_ACCOUNT_API = (() => {
     return { saved: true };
   }
 
+  // ---------- Bookings ----------
+  const mapBooking = b => ({
+    ...b,
+    statusLabel: bookingLabel(b.status),
+    propertyImage: imgUrl(b.propertyImage),
+    requestedAt: dateOnly(b.requestedAt),
+    decidedAt: dateOnly(b.decidedAt),
+    cancelledAt: dateOnly(b.cancelledAt)
+  });
+  async function createBooking(data) {
+    if (demo()) return { saved: false };
+    const r = await req("/bookings", { method: "POST", body: data });
+    return { saved: true, booking: r && r.booking ? mapBooking(r.booking) : null };
+  }
+  async function getMyBookings() {
+    if (demo()) return [];
+    const r = await req("/me/bookings");
+    return listOf(r).map(mapBooking);
+  }
+  async function cancelMyBooking(id) {
+    if (demo()) return { saved: false };
+    const r = await req(`/me/bookings/${encodeURIComponent(id)}/cancel`, { method: "POST" });
+    return { saved: true, booking: r && r.booking ? mapBooking(r.booking) : null };
+  }
+  async function getLandlordBookings() {
+    if (demo()) return { items: [], total: 0, pendingCount: 0, confirmedCount: 0 };
+    const r = await req("/landlord/bookings");
+    return {
+      items: listOf(r).map(mapBooking),
+      total: num(r && r.total),
+      pendingCount: num(r && r.pendingCount),
+      confirmedCount: num(r && r.confirmedCount)
+    };
+  }
+  async function confirmBooking(id) {
+    if (demo()) return { saved: false };
+    const r = await req(`/landlord/bookings/${encodeURIComponent(id)}/confirm`, { method: "POST" });
+    return { saved: true, booking: r && r.booking ? mapBooking(r.booking) : null };
+  }
+  async function rejectBooking(id, reason) {
+    if (demo()) return { saved: false };
+    const r = await req(`/landlord/bookings/${encodeURIComponent(id)}/reject`, { method: "POST", body: reason ? { reason } : {} });
+    return { saved: true, booking: r && r.booking ? mapBooking(r.booking) : null };
+  }
+  async function cancelLandlordBooking(id, reason) {
+    if (demo()) return { saved: false };
+    const r = await req(`/landlord/bookings/${encodeURIComponent(id)}/cancel`, { method: "POST", body: reason ? { reason } : {} });
+    return { saved: true, booking: r && r.booking ? mapBooking(r.booking) : null };
+  }
+
+  // ---------- Chat ----------
+  const mapConv = c => ({
+    ...c,
+    property: c.property ? { ...c.property, thumbnail: imgUrl(c.property.thumbnail) } : null
+  });
+  async function getConversations() {
+    if (demo()) return { items: [], total: 0, totalUnread: 0 };
+    const r = await req("/chat/conversations");
+    return { items: listOf(r).map(mapConv), total: num(r && r.total), totalUnread: num(r && r.totalUnread) };
+  }
+  async function startConversation(propertyId, message) {
+    if (demo()) return { saved: false };
+    const r = await req("/chat/conversations", { method: "POST", body: { propertyId, ...(message ? { message } : {}) } });
+    return { saved: true, conversation: r && r.conversation ? mapConv(r.conversation) : null, message: r && r.message };
+  }
+  async function getMessages(conversationId) {
+    if (demo()) return { conversation: null, messages: [] };
+    const r = await req(`/chat/conversations/${encodeURIComponent(conversationId)}/messages`);
+    return {
+      conversation: r && r.conversation ? mapConv(r.conversation) : null,
+      messages: asArray(r && r.messages)
+    };
+  }
+  async function sendMessage(conversationId, body) {
+    if (demo()) return { saved: false };
+    const r = await req(`/chat/conversations/${encodeURIComponent(conversationId)}/messages`, { method: "POST", body: { body } });
+    return { saved: true, message: r && r.message };
+  }
+  async function markConversationRead(conversationId) {
+    if (demo()) return { ok: true };
+    return await req(`/chat/conversations/${encodeURIComponent(conversationId)}/read`, { method: "POST" });
+  }
+
   // ---------- Admin ----------
   async function getAdminOverview() { // -> { stats, pending, users }
     const o = (demo() ? sample().admin : await req("/admin/overview")) || {};
@@ -163,14 +266,80 @@ window.BK_ACCOUNT_API = (() => {
     return {
       stats: { users: num(s.users), landlords: num(s.landlords), activeListings: num(s.activeListings), pendingReviews: num(s.pendingReviews), openReports: num(s.openReports) },
       pending: asArray(o.pending).map(p => ({ id: p.id ?? p._id, title: p.title || "Untitled", landlordName: p.landlordName || "", submittedAt: dateOnly(p.submittedAt) })),
-      users: asArray(o.users).map(u => ({ id: u.id ?? u._id, name: u.name || "", email: u.email || "", role: humanize(u.role), status: humanize(u.status) }))
+      users: asArray(o.users).map(u => ({ id: u.id ?? u._id, name: u.name || "", email: u.email || "", role: humanize(u.role), roleKey: u.role, status: humanize(u.status), statusKey: u.status }))
     };
   }
-  async function reviewListing(id, decision) { // decision: "approved" | "rejected"
+  async function reviewListing(id, decision, note) { // decision: "approved" | "rejected"
     if (!["approved", "rejected"].includes(decision)) throw new Error("Invalid decision.");
     if (demo()) return { saved: false };
-    await req(`/admin/properties/${encodeURIComponent(id)}/review`, { method: "POST", body: { decision } });
+    await req(`/admin/properties/${encodeURIComponent(id)}/review`, { method: "POST", body: { decision, ...(note ? { note } : {}) } });
     return { saved: true };
+  }
+  async function getAdminProperties(status) {
+    if (demo()) return [];
+    const r = await req("/admin/properties", { query: status ? { status } : undefined });
+    return listOf(r).map(p => ({ ...p, statusLabel: listingLabel(p.status), submittedAt: dateOnly(p.submittedAt), bookedAt: dateOnly(p.bookedAt) }));
+  }
+  async function getAdminProperty(id) {
+    if (demo()) return null;
+    const p = await req(`/admin/properties/${encodeURIComponent(id)}`);
+    if (!p) return null;
+    return {
+      ...p,
+      statusLabel: listingLabel(p.status),
+      images: asArray(p.images).map(imgUrl),
+      availableFrom: dateOnly(p.availableFrom),
+      submittedAt: dateOnly(p.submittedAt),
+      reviewedAt: dateOnly(p.reviewedAt),
+      bookedAt: dateOnly(p.bookedAt)
+    };
+  }
+  async function getAdminUsers(role, status) {
+    if (demo()) {
+      const users = await getAdminOverview().then(o => o.users);
+      return users.filter(u => (!role || u.roleKey === role) && (!status || u.statusKey === status));
+    }
+    const r = await req("/admin/users", { query: { ...(role ? { role } : {}), ...(status ? { status } : {}) } });
+    return listOf(r).map(u => ({ id: u.id ?? u._id, name: u.name || "", email: u.email || "", role: humanize(u.role), roleKey: u.role, status: humanize(u.status), statusKey: u.status }));
+  }
+  async function toggleAdminPropertyFlag(id, flags) {
+    if (demo()) return { saved: false };
+    await req(`/admin/properties/${encodeURIComponent(id)}/flags`, { method: "PATCH", body: flags });
+    return { saved: true };
+  }
+  async function updateAdminUserStatus(id, status, note) {
+    if (demo()) return { saved: false };
+    const r = await req(`/admin/users/${encodeURIComponent(id)}/status`, { method: "PATCH", body: { status, ...(note ? { note } : {}) } });
+    return { saved: true, user: r && r.user };
+  }
+  async function getAdminBookings(status) {
+    if (demo()) return [];
+    const r = await req("/admin/bookings", { query: status ? { status } : undefined });
+    return listOf(r).map(mapBooking);
+  }
+  async function cancelAdminBooking(id, reason) {
+    if (demo()) return { saved: false };
+    const r = await req(`/admin/bookings/${encodeURIComponent(id)}/cancel`, { method: "POST", body: reason ? { reason } : {} });
+    return { saved: true, booking: r && r.booking ? mapBooking(r.booking) : null };
+  }
+  async function getAdminModerationHistory() {
+    if (demo()) return [];
+    return listOf(await req("/admin/moderation-history"));
+  }
+  async function getAdminReports() {
+    if (demo()) return [];
+    return listOf(await req("/admin/reports"));
+  }
+  async function updateAdminReportStatus(id, status) {
+    if (demo()) return { saved: false };
+    await req(`/admin/reports/${encodeURIComponent(id)}`, { method: "PATCH", body: { status } });
+    return { saved: true };
+  }
+
+  // ---------- Public property contact ----------
+  async function getPropertyContact(id) {
+    if (demo()) return { previewOnly: true, landlordName: "Landlord", phone: "01711-000000" };
+    return await req(`/properties/${encodeURIComponent(id)}/contact`, { auth401: false });
   }
 
   // ---------- Contact ----------
@@ -180,5 +349,13 @@ window.BK_ACCOUNT_API = (() => {
     return { saved: true };
   }
 
-  return { auth, logout, getFavorites, removeFavorite, getInquiries, getLandlordOverview, saveListing, setListingStatus, deleteListing, getAdminOverview, reviewListing, sendContact };
+  return {
+    auth, logout, getFavorites, addFavorite, removeFavorite, getInquiries, getPropertyContact,
+    getLandlordOverview, getLandlordProperty, saveListing, setListingStatus, deleteListing,
+    createBooking, getMyBookings, cancelMyBooking, getLandlordBookings, confirmBooking, rejectBooking, cancelLandlordBooking,
+    getConversations, startConversation, getMessages, sendMessage, markConversationRead,
+    getAdminOverview, reviewListing, getAdminProperties, getAdminProperty, toggleAdminPropertyFlag, getAdminUsers, updateAdminUserStatus,
+    getAdminBookings, cancelAdminBooking, getAdminModerationHistory, getAdminReports, updateAdminReportStatus,
+    sendContact
+  };
 })();

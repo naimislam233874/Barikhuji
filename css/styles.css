@@ -53,7 +53,7 @@ details{background:#fff;border-radius:12px;padding:.8rem 1rem;margin-bottom:.6re
 .empty{text-align:center;padding:3rem 1rem;background:#fff;border-radius:var(--r)}
 /* details */
 .gallery-main{border-radius:var(--r);aspect-ratio:16/10;object-fit:cover;width:100%}
-.thumbs{display:flex;gap:.5rem;margin-top:.5rem}.thumbs button{border:2px solid transparent;padding:0;border-radius:10px;overflow:hidden;cursor:pointer;width:90px}
+.thumbs{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}.thumbs button{border:2px solid transparent;padding:0;border-radius:10px;overflow:hidden;cursor:pointer;width:90px}
 .thumbs button[aria-current=true]{border-color:var(--em)}
 .detail{display:grid;gap:1.5rem}@media(min-width:900px){.detail{grid-template-columns:2fr 1fr}}
 .panel{background:#fff;padding:1.2rem;border-radius:var(--r);box-shadow:var(--sh);margin-bottom:1rem}

@@ -26,10 +26,42 @@ table{width:100%;border-collapse:collapse;min-width:560px}
 th,td{padding:.75rem .9rem;text-align:left;border-bottom:1px solid var(--be);vertical-align:top}
 th{background:var(--be);color:var(--g9);font-size:.85rem}
 .status{display:inline-block;padding:.15rem .6rem;border-radius:99px;font-size:.78rem;font-weight:600;background:var(--be);color:var(--g9)}
-.status.active,.status.replied,.status.approved{background:#d6f3e4;color:#0b5a39}
-.status.pending,.status.pending-review{background:#fff1cc;color:#7a5a00}
-.status.paused,.status.closed,.status.rejected{background:#ece7dc;color:#5d6b64}
+.status.active,.status.replied,.status.approved,.status.confirmed,.status.resolved{background:#d6f3e4;color:#0b5a39}
+.status.pending,.status.pending-review,.status.pending-verification,.status.open{background:#fff1cc;color:#7a5a00}
+.status.paused,.status.closed,.status.rejected,.status.cancelled,.status.booked,.status.suspended{background:#ece7dc;color:#5d6b64}
+.status.booked{background:#e3eefc;color:#12447d}
+.status.suspended,.status.rejected{background:#fdecea;color:#8c1d18}
 .actions{display:flex;gap:.4rem;flex-wrap:wrap}
 .btn.sm{padding:.3rem .9rem;font-size:.85rem}
 .btn.danger{background:#b3261e}.btn.danger:hover{background:#8c1d18}
 .fav-item .btn{margin-top:.5rem}
+/* image upload preview grid */
+.bk-img-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.7rem;margin-top:.7rem}
+.bk-img-item{background:#fff;border:1px solid var(--be);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.bk-img-item img{width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--be)}
+.bk-img-item .bk-img-foot{display:flex;justify-content:space-between;align-items:center;gap:.3rem;padding:.35rem .5rem;font-size:.75rem;color:var(--mu)}
+/* native chat UI */
+.bk-chat{display:grid;background:#fff;border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;min-height:460px;border:1px solid var(--be)}
+@media(min-width:800px){.bk-chat{grid-template-columns:290px 1fr;height:560px}}
+.bk-chat-list{border-right:1px solid var(--be);overflow-y:auto;background:var(--ow)}
+.bk-chat-item{display:flex;gap:.7rem;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--be);padding:.75rem .9rem;cursor:pointer;font:inherit;color:var(--tx)}
+.bk-chat-item:hover{background:var(--be)}
+.bk-chat-item[aria-selected=true]{background:#d6f3e4}
+.bk-chat-thumb{width:48px;height:48px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--be)}
+.bk-chat-meta{min-width:0;flex:1}
+.bk-chat-top{display:flex;justify-content:space-between;align-items:center;gap:.4rem}
+.bk-chat-top strong{font-size:.92rem;color:var(--g9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-chat-sub{font-size:.8rem;color:var(--g7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-chat-last{font-size:.8rem;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.15rem}
+.bk-chat-thread{display:flex;flex-direction:column;min-height:420px;height:100%}
+.bk-chat-head{display:flex;align-items:center;gap:.75rem;padding:.8rem 1rem;border-bottom:1px solid var(--be);background:#fff}
+.bk-chat-back{display:inline-block}
+@media(min-width:800px){.bk-chat-back{display:none}}
+@media(max-width:799px){.bk-chat.has-active .bk-chat-list{display:none}.bk-chat:not(.has-active) .bk-chat-thread{display:none}}
+.bk-chat-msgs{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.6rem;background:var(--ow)}
+.bk-msg{max-width:78%;padding:.6rem .85rem;border-radius:14px;background:#fff;border:1px solid var(--be);align-self:flex-start;word-break:break-word}
+.bk-msg.mine{background:var(--g9);color:#fff;border-color:var(--g9);align-self:flex-end}
+.bk-msg-time{display:block;font-size:.72rem;margin-top:.25rem;color:var(--mu)}
+.bk-msg.mine .bk-msg-time{color:#cfe6d9}
+.bk-chat-form{display:flex;gap:.5rem;padding:.75rem 1rem;border-top:1px solid var(--be);background:#fff;align-items:center}
+.bk-chat-form input{flex:1;padding:.6rem .85rem;border:1px solid #c9c2b0;border-radius:999px;font:inherit}

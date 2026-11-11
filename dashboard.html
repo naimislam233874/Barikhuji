@@ -16,6 +16,8 @@
     <div role="tablist" aria-orientation="vertical" aria-label="Dashboard sections">
       <button type="button" role="tab" id="tab-overview" data-tab="overview" aria-controls="panel-overview">Overview</button>
       <button type="button" role="tab" id="tab-favorites" data-tab="favorites" aria-controls="panel-favorites">Favorites</button>
+      <button type="button" role="tab" id="tab-bookings" data-tab="bookings" aria-controls="panel-bookings">Bookings</button>
+      <button type="button" role="tab" id="tab-messages" data-tab="messages" aria-controls="panel-messages">Messages <span class="badge ok" id="nav-unread" hidden>0</span></button>
       <button type="button" role="tab" id="tab-inquiries" data-tab="inquiries" aria-controls="panel-inquiries">Inquiry history</button>
     </div>
     <button type="button" class="btn outline sm" id="signout">Sign out</button>
@@ -24,6 +26,7 @@
     <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">
       <div class="stats">
         <div class="stat"><strong id="stat-favs">–</strong><span>Saved favorites</span></div>
+        <div class="stat"><strong id="stat-bookings">–</strong><span>Bookings</span></div>
         <div class="stat"><strong id="stat-inqs">–</strong><span>Inquiries sent</span></div>
       </div>
       <a class="btn" href="browse.html">Find more rentals</a>
@@ -31,6 +34,14 @@
     <section role="tabpanel" id="panel-favorites" aria-labelledby="tab-favorites" hidden>
       <h2>Favorites</h2>
       <div class="grid" id="fav-grid" aria-live="polite"></div>
+    </section>
+    <section role="tabpanel" id="panel-bookings" aria-labelledby="tab-bookings" hidden>
+      <h2>My bookings</h2>
+      <div id="booking-box" aria-live="polite"></div>
+    </section>
+    <section role="tabpanel" id="panel-messages" aria-labelledby="tab-messages" hidden>
+      <h2>Messages</h2>
+      <div id="chat-box" aria-live="polite"></div>
     </section>
     <section role="tabpanel" id="panel-inquiries" aria-labelledby="tab-inquiries" hidden>
       <h2>Inquiry history</h2>
@@ -42,9 +53,11 @@
 <script src="js/config.js"></script>
 <script src="js/data/sample-properties.js"></script>
 <script src="js/data/sample-account.js"></script>
+<script src="js/http.js"></script>
 <script src="js/api.js"></script>
 <script src="js/api-account.js"></script>
 <script src="js/components.js"></script>
 <script src="js/dash-common.js"></script>
+<script src="js/chat-widget.js"></script>
 <script src="js/pages/dashboard.js"></script>
 </body></html>

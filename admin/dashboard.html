@@ -16,20 +16,51 @@
     <div role="tablist" aria-orientation="vertical" aria-label="Dashboard sections">
       <button type="button" role="tab" id="tab-overview" data-tab="overview" aria-controls="panel-overview">Overview</button>
       <button type="button" role="tab" id="tab-reviews" data-tab="reviews" aria-controls="panel-reviews">Listing reviews</button>
+      <button type="button" role="tab" id="tab-properties" data-tab="properties" aria-controls="panel-properties">All properties</button>
+      <button type="button" role="tab" id="tab-bookings" data-tab="bookings" aria-controls="panel-bookings">Bookings</button>
       <button type="button" role="tab" id="tab-users" data-tab="users" aria-controls="panel-users">Users</button>
+      <button type="button" role="tab" id="tab-reports" data-tab="reports" aria-controls="panel-reports">Reports</button>
+      <button type="button" role="tab" id="tab-history" data-tab="history" aria-controls="panel-history">Moderation history</button>
     </div>
     <button type="button" class="btn outline sm" id="signout">Sign out</button>
   </div>
   <div>
     <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview"><div class="stats" id="stats" aria-live="polite"></div></section>
     <section role="tabpanel" id="panel-reviews" aria-labelledby="tab-reviews" hidden><h2>Listings awaiting review</h2><div id="review-box" aria-live="polite"></div></section>
-    <section role="tabpanel" id="panel-users" aria-labelledby="tab-users" hidden><h2>Users</h2><div id="user-box" aria-live="polite"></div></section>
+    <section role="tabpanel" id="panel-properties" aria-labelledby="tab-properties" hidden>
+      <div class="toolbar"><h2 style="margin:0">All properties</h2>
+        <select id="prop-status-filter" aria-label="Filter properties by status">
+          <option value="">All statuses</option>
+          <option value="active">Active</option>
+          <option value="booked">Booked</option>
+          <option value="pending_review">Pending review</option>
+          <option value="paused">Paused</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div id="prop-box" aria-live="polite"></div>
+    </section>
+    <section role="tabpanel" id="panel-bookings" aria-labelledby="tab-bookings" hidden><h2>Bookings</h2><div id="booking-box" aria-live="polite"></div></section>
+    <section role="tabpanel" id="panel-users" aria-labelledby="tab-users" hidden>
+      <div class="toolbar"><h2 style="margin:0">Users</h2>
+        <select id="user-role-filter" aria-label="Filter users by role">
+          <option value="">All roles</option>
+          <option value="customer">Customers</option>
+          <option value="landlord">Landlords</option>
+          <option value="admin">Admins</option>
+        </select>
+      </div>
+      <div id="user-box" aria-live="polite"></div>
+    </section>
+    <section role="tabpanel" id="panel-reports" aria-labelledby="tab-reports" hidden><h2>Contact &amp; reports</h2><div id="report-box" aria-live="polite"></div></section>
+    <section role="tabpanel" id="panel-history" aria-labelledby="tab-history" hidden><h2>Moderation history</h2><div id="history-box" aria-live="polite"></div></section>
   </div>
 </div></div></main>
 <div id="site-footer"></div>
 <script src="../js/config.js"></script>
 <script src="../js/data/sample-properties.js"></script>
 <script src="../js/data/sample-account.js"></script>
+<script src="../js/http.js"></script>
 <script src="../js/api-account.js"></script>
 <script src="../js/components.js"></script>
 <script src="../js/dash-common.js"></script>

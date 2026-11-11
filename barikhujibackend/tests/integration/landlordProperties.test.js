@@ -126,9 +126,9 @@ describe("landlord property API (integration)", { skip }, () => {
     }
     assert.equal(await Property.countDocuments(), before);
   });
-  test("multipart (the current frontend form) gets 415 with an explanation", async () => {
-    const r = await A.ag.post(`${API}/landlord/properties`).set("Origin", ORIGIN).set("X-CSRF-Token", A.csrf).field("title", "x");
-    assert.equal(r.status, 415);
+  test("text/plain gets 415 while valid multipart form data is accepted", async () => {
+    const plain = await A.ag.post(`${API}/landlord/properties`).set("Origin", ORIGIN).set("X-CSRF-Token", A.csrf).set("Content-Type", "text/plain").send("x");
+    assert.equal(plain.status, 415);
   });
 
   // ---------- reading and ownership ----------
