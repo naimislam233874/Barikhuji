@@ -81,6 +81,12 @@ window.BK_HTTP = (() => {
 
     if (!res.ok) {
       if (res.status === 401 && auth401) handleUnauthorized();
+      if (res.status === 403 && data && /security token/i.test(String(data.message || ""))) {
+        resetCsrf();
+        if (!opts._csrfRetried && method !== "GET" && C.CSRF_PATH) {
+          return request(path, { ...opts, _csrfRetried: true });
+        }
+      }
       throw new ApiError((data && data.message) || messageFor(res.status), res.status, data && data.errors ? data.errors : null);
     }
     return data;

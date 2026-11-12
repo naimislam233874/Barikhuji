@@ -2,29 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Landlord Login – Barikhuji</title>
+<title>Landlord Sign In – Barikhuji</title>
 <link rel="stylesheet" href="../css/styles.css"><link rel="stylesheet" href="../css/dashboard.css">
+<script>
+(() => {
+  const qs = new URLSearchParams(location.search);
+  qs.set("role", "landlord");
+  qs.set("mode", "login");
+  location.replace("../login.html?" + qs.toString());
+})();
+</script>
 </head>
 <body data-root="../">
 <div id="site-header"></div>
 <main id="main" class="section"><div class="container">
 <div class="auth-card">
-  <h1>Landlord login</h1>
-  <p>Manage your listings and reply to inquiries.</p>
-  <p id="form-status" class="notice" role="status" hidden></p>
-  <form data-auth="landlord-login" data-redirect="dashboard.html" novalidate>
-    <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" required><span class="err" id="email-err" aria-live="polite"></span></div>
-    <div class="field"><label for="password">Password *</label><input id="password" name="password" type="password" autocomplete="current-password" required><span class="err" id="password-err" aria-live="polite"></span></div>
-    <button class="btn" type="submit">Sign in</button>
-  </form>
-  <p class="auth-alt">New landlord? <a href="register.html">Create a landlord account</a></p>
-  <p class="auth-alt">Looking for a home? <a href="../login.html">Customer login</a></p>
+  <h1>Sign in to Barikhuji</h1>
+  <p>We have unified Renter and Landlord sign-in into a single page.</p>
+  <a class="btn" href="../login.html?role=landlord">Continue to Landlord Sign In</a>
 </div></div></main>
 <div id="site-footer"></div>
 <script src="../js/config.js"></script>
 <script src="../js/components.js"></script>
-<script src="../js/validation.js"></script>
-<script src="../js/http.js"></script>
-<script src="../js/api-account.js"></script>
-<script src="../js/pages/auth.js"></script>
 </body></html>

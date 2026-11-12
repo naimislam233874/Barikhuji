@@ -11,7 +11,7 @@ const STATUSES = Object.freeze(["pending_review", "active", "paused", "rejected"
 const LANDLORD_SETTABLE_STATUSES = Object.freeze(["active", "paused"]);
 const MAX_IMAGES = 10;
 const LIMITS = Object.freeze({
-  title: [10, 100], description: [30, 2000], area: [2, 80], address: [0, 200],
+  title: [10, 100], description: [1, Infinity], area: [2, 80], address: [0, 200],
   rent: [1, 10000000], deposit: [0, 50000000], bedrooms: [1, 10], bathrooms: [1, 10]
 });
 

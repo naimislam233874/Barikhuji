@@ -1,9 +1,16 @@
 (async () => {
   const root = document.getElementById("detail");
-  const p = await BK_API.getProperty(new URLSearchParams(location.search).get("id"));
+  const qs = new URLSearchParams(location.search);
+  const pendingAction = qs.get("pendingAction") || "";
+  const p = await BK_API.getProperty(qs.get("id"));
   if (!p) { root.innerHTML = `<div class="empty"><h1>Property not found</h1><a class="btn" href="browse.html">Back to browse</a></div>`; return; }
+  if (pendingAction && window.history && history.replaceState) {
+    qs.delete("pendingAction");
+    const cleanSearch = qs.toString();
+    history.replaceState(null, "", location.pathname + (cleanSearch ? "?" + cleanSearch : "") + location.hash);
+  }
   document.title = p.title + " – Barikhuji";
-  const e = BK.esc;  root.innerHTML = `<p><a href="browse.html">← Back to results</a></p><h1>${e(p.title)}</h1>
+  const e = BK.esc; root.innerHTML = `<p><a href="browse.html">← Back to results</a></p><h1>${e(p.title)}</h1>
   <p>📍 ${e(p.area)}, ${e(p.city)} ${p.verified ? BK.badge("✓ Verified", "ok") : ""}</p>
   <div class="detail"><div>
     <img class="gallery-main" id="main-img" src="${e(p.images[0])}" alt="${e(p.title)} photo 1">
@@ -27,8 +34,36 @@
   root.querySelectorAll(".thumbs button").forEach(b => b.onclick = () => {
     main.src = p.images[b.dataset.i]; root.querySelectorAll(".thumbs button").forEach(x => x.removeAttribute("aria-current")); b.setAttribute("aria-current", "true");
   });
+
+  function showRenterRequiredModal(user) {
+    const roleLabel = user && user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "Non-renter";
+    BK.openModal("Renter account required", `<p>Only signed-in Renter accounts can perform this customer action. You are currently signed in as <strong>${e(roleLabel)}</strong>.</p>`);
+  }
+
+  async function requireSession(actionKey, { customerOnly = true } = {}) {
+    if (window.BK_CONFIG && window.BK_CONFIG.USE_SAMPLE_DATA) return { role: "customer" };
+    const user = await BK.getCurrentUser(true);
+    if (BK.refreshNav) BK.setCurrentUser(user);
+    if (!user) {
+      BK.openLoginRequiredModal({ action: actionKey, propertyId: p.id });
+      return null;
+    }
+    if (customerOnly && user.role !== "customer") {
+      showRenterRequiredModal(user);
+      return null;
+    }
+    return user;
+  }
+
+  function handle401(actionKey) {
+    BK.setCurrentUser(null);
+    BK.openLoginRequiredModal({ action: actionKey, propertyId: p.id });
+  }
+
   const callBtn = document.getElementById("call");
-  callBtn.onclick = async () => {
+  async function runShowPhone() {
+    const user = await requireSession("call", { customerOnly: false });
+    if (!user) return;
     callBtn.disabled = true;
     try {
       const info = await BK_ACCOUNT_API.getPropertyContact(p.id);
@@ -40,19 +75,20 @@
         BK.openModal("Landlord contact", `<p><strong>${e((info && info.landlordName) || p.landlord.name)}</strong></p><p>No phone number is listed for this account. Please use Message landlord or Send inquiry.</p>`);
       }
     } catch (err) {
-      if (err.status === 401) {
-        BK.openModal("Sign in required", `<p>Please sign in to view the landlord's phone number, or use Message landlord / Send inquiry.</p><p><a class="btn sm" href="login.html">Customer sign in</a></p>`);
-      } else {
-        BK.toast(err.message || "Could not load landlord phone number.");
-      }
+      if (err.status === 401) handle401("call");
+      else BK.toast(err.message || "Could not load landlord phone number.");
     }
     callBtn.disabled = false;
-  };
+  }
+  callBtn.onclick = runShowPhone;
+
   // Save/unsave this listing to the signed-in customer's favorites (demo mode: preview only).
   const favBtn = document.getElementById("save-fav");
   let favState = "idle"; // idle -> busy, so a double click cannot fire two POSTs
-  favBtn.onclick = async () => {
+  async function runSaveFav() {
     if (favState === "busy") return;
+    const user = await requireSession("fav");
+    if (!user) return;
     favState = "busy"; favBtn.disabled = true;
     try {
       const res = await BK_ACCOUNT_API.addFavorite(p.id);
@@ -64,19 +100,30 @@
         BK.toast("Preview only: sign-in and saving are not connected yet.");
       }
     } catch (err) {
-      if (err.status === 401) BK.toast("Please sign in as a customer to save favorites.");
+      if (err.status === 401) handle401("fav");
+      else if (err.status === 403) showRenterRequiredModal(user);
       else BK.toast(err.message || "Could not save this favorite. Please try again.");
     }
     favState = "idle"; if (favBtn.textContent !== "Saved to favorites ✓") favBtn.disabled = false;
-  };
-  document.getElementById("book-prop").onclick = () => {
+  }
+  favBtn.onclick = runSaveFav;
+
+  async function runBookModal() {
+    const user = await requireSession("book");
+    if (!user) return;
     const today = new Date().toISOString().slice(0, 10);
-    const m = BK.openModal("Request booking", `<form id="book-form" novalidate>
+    const m = BK.openModal("Request booking", `
+      <div class="bk-booking-summary">
+        <p><strong>${e(p.title)}</strong></p>
+        <p>${e(p.area)}, ${e(p.city)} · <strong>${BK.taka(p.rent)}</strong>/month</p>
+        <p>Security deposit: <strong>${BK.taka(p.deposit)}</strong></p>
+      </div>
+      <form id="book-form" novalidate>
       ${BK.field({ id: "moveInDate", label: "Move-in date", type: "date", required: true, attrs: `min="${today}"` })}
       ${BK.field({ id: "moveOutDate", label: "Move-out date (optional)", type: "date", attrs: `min="${today}"` })}
-      ${BK.field({ id: "phone", label: "Mobile number (optional)", type: "tel", attrs: "data-bdphone placeholder='01XXXXXXXXX'" })}
+      ${BK.field({ id: "phone", label: "Mobile number (optional)", type: "tel", attrs: `data-bdphone placeholder='01XXXXXXXXX' value="${e(user.phone || "")}"` })}
       <div class="field"><label for="book-msg">Note to landlord (optional)</label><textarea id="book-msg" name="message" rows="3" maxlength="500"></textarea><span class="err" id="book-msg-err" aria-live="polite"></span></div>
-      <button class="btn" type="submit">Submit booking request</button></form>`);
+      <button class="btn" type="submit">Confirm booking request</button></form>`);
     BK_VALIDATE(m.querySelector("#book-form"), async data => {
       const btn = m.querySelector("button[type=submit]");
       btn.disabled = true;
@@ -90,12 +137,16 @@
         BK.toast(res.saved ? "Booking request sent! Track it in your dashboard." : "Preview only: booking was not saved.");
       } catch (err) {
         btn.disabled = false;
-        if (err.status === 401) BK.toast("Please sign in as a customer to request a booking.");
+        if (err.status === 401) { BK.closeModal(); handle401("book"); }
         else BK.toast(err.message || "Could not submit booking request.");
       }
     });
-  };
-  document.getElementById("chat-prop").onclick = () => {
+  }
+  document.getElementById("book-prop").onclick = runBookModal;
+
+  async function runChatModal() {
+    const user = await requireSession("chat");
+    if (!user) return;
     const m = BK.openModal("Message landlord", `<form id="chat-form" novalidate>
       <div class="field"><label for="chat-msg">Message *</label><textarea id="chat-msg" name="message" rows="3" required minlength="1" maxlength="2000" placeholder="Ask about availability, rent or viewing…"></textarea><span class="err" id="chat-msg-err" aria-live="polite"></span></div>
       <button class="btn" type="submit">Start chat</button></form>`);
@@ -113,14 +164,18 @@
         }
       } catch (err) {
         btn.disabled = false;
-        if (err.status === 401) BK.toast("Please sign in as a customer to message the landlord.");
+        if (err.status === 401) { BK.closeModal(); handle401("chat"); }
         else BK.toast(err.message || "Could not start conversation.");
       }
     });
-  };
-  document.getElementById("inquire").onclick = () => {
-    const m = BK.openModal("Contact landlord", `<form id="inq" novalidate>${BK.field({ id: "name", label: "Your name", required: true })}
-      ${BK.field({ id: "phone", label: "Mobile number", type: "tel", required: true, attrs: "data-bdphone" })}
+  }
+  document.getElementById("chat-prop").onclick = runChatModal;
+
+  async function runInquireModal() {
+    const user = await requireSession("inquire");
+    if (!user) return;
+    const m = BK.openModal("Contact landlord", `<form id="inq" novalidate>${BK.field({ id: "name", label: "Your name", required: true, attrs: `value="${e(user.name || "")}"` })}
+      ${BK.field({ id: "phone", label: "Mobile number", type: "tel", required: true, attrs: `data-bdphone value="${e(user.phone || "")}"` })}
       <div class="field"><label for="message">Message *</label><textarea id="message" name="message" rows="3" required minlength="10"></textarea><span class="err" id="message-err" aria-live="polite"></span></div>
       <button class="btn" type="submit">Send</button></form>`);
     BK_VALIDATE(m.querySelector("#inq"), async data => {
@@ -129,9 +184,22 @@
         BK.closeModal();
         BK.toast(res.saved ? "Your inquiry has been sent to the landlord." : "Form is valid. Not saved: backend not connected yet.");
       } catch (err) {
-        if (err.status === 401) BK.toast("Please sign in as a customer to send an inquiry.");
+        if (err.status === 401) { BK.closeModal(); handle401("inquire"); }
         else BK.toast(err.message || "Could not send inquiry.");
       }
     });
-  };
+  }
+  document.getElementById("inquire").onclick = runInquireModal;
+
+  if (pendingAction) {
+    const handlers = {
+      book: runBookModal,
+      call: runShowPhone,
+      chat: runChatModal,
+      inquire: runInquireModal,
+      fav: runSaveFav
+    };
+    const fn = handlers[pendingAction];
+    if (fn) await fn();
+  }
 })();

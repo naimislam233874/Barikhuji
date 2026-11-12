@@ -101,6 +101,16 @@ window.BK_ACCOUNT_API = (() => {
     if (window.BK_HTTP) window.BK_HTTP.resetCsrf();
     return { ok: true };
   }
+  async function getMe() {
+    if (demo()) return null;
+    try {
+      const res = await req("/auth/me", { auth401: false });
+      return (res && res.user) || null;
+    } catch (err) {
+      if (err && err.status === 401) return null;
+      throw err;
+    }
+  }
 
   // ---------- Customer ----------
   async function getFavorites() {
@@ -350,7 +360,7 @@ window.BK_ACCOUNT_API = (() => {
   }
 
   return {
-    auth, logout, getFavorites, addFavorite, removeFavorite, getInquiries, getPropertyContact,
+    auth, logout, getMe, getFavorites, addFavorite, removeFavorite, getInquiries, getPropertyContact,
     getLandlordOverview, getLandlordProperty, saveListing, setListingStatus, deleteListing,
     createBooking, getMyBookings, cancelMyBooking, getLandlordBookings, confirmBooking, rejectBooking, cancelLandlordBooking,
     getConversations, startConversation, getMessages, sendMessage, markConversationRead,

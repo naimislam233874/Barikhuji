@@ -63,9 +63,12 @@ describe("property input: validation rules", () => {
     assert.deepEqual(parse({ rent: 100 }, { requireAll: false }).errors, {});
     assert.ok(parse({ rent: 0 }, { requireAll: false }).errors.rent);
   });
-  test("title and description length limits", () => {
+  test("title length limits and unbounded description length", () => {
     assert.ok(err({ title: "short" }, "title")); assert.ok(err({ title: "x".repeat(101) }, "title")); assert.equal(err({ title: "x".repeat(100) }, "title"), undefined);
-    assert.ok(err({ description: "too short" }, "description")); assert.ok(err({ description: "d".repeat(2001) }, "description"));
+    assert.equal(err({ description: "smoking not allow" }, "description"), undefined);
+    assert.equal(err({ description: "a" }, "description"), undefined);
+    assert.equal(err({ description: "d".repeat(5000) }, "description"), undefined);
+    assert.ok(err({ description: "   " }, "description"));
   });
   test("wrong types are rejected (objects, arrays, numbers where text is expected)", () => {
     assert.ok(err({ title: 12345678901 }, "title")); assert.ok(err({ title: { $gt: "" } }, "title")); assert.ok(err({ area: ["Dhanmondi"] }, "area"));

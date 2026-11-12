@@ -28,7 +28,8 @@ const str = (label, [min, max], multiline = false) => v => {
   if (typeof v !== "string") return { error: `${label} must be text.` };
   const s = v.trim();
   if ((multiline ? MULTI_LINE_BAD : SINGLE_LINE_BAD).test(s)) return { error: `${label} contains unsupported characters.` };
-  if (s.length < min || s.length > max) return { error: min === 0 ? `${label} must be at most ${max} characters.` : `${label} must be between ${min} and ${max} characters.` };
+  if (s.length < min) return { error: min <= 1 ? `${label} is required.` : `${label} must be between ${min} and ${max} characters.` };
+  if (Number.isFinite(max) && s.length > max) return { error: min === 0 ? `${label} must be at most ${max} characters.` : `${label} must be between ${min} and ${max} characters.` };
   return { value: s };
 };
 

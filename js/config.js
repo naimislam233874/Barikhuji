@@ -27,6 +27,16 @@
   }
 
   cfg.API_BASE = String(cfg.API_BASE).replace(/\/+$/, "");
+  if (!cfg.USE_SAMPLE_DATA && typeof location !== "undefined") {
+    try {
+      const apiUrl = new URL(cfg.API_BASE);
+      const isLoopback = (h) => h === "localhost" || h === "127.0.0.1";
+      if (isLoopback(location.hostname) && isLoopback(apiUrl.hostname) && apiUrl.hostname !== location.hostname) {
+        apiUrl.hostname = location.hostname;
+        cfg.API_BASE = apiUrl.toString().replace(/\/+$/, "");
+      }
+    } catch (_) {}
+  }
   if (!cfg.USE_SAMPLE_DATA && !cfg.ASSET_BASE) {
     try { cfg.ASSET_BASE = new URL(cfg.API_BASE).origin; } catch (_) {}
   }

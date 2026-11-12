@@ -63,3 +63,14 @@ details{background:#fff;border-radius:12px;padding:.8rem 1rem;margin-bottom:.6re
 .toast{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:var(--g9);color:#fff;padding:.7rem 1.2rem;border-radius:99px;z-index:60}
 .site-footer{background:var(--g9);color:#cfe6d9;padding:2.5rem 0 1rem}
 .site-footer a{color:#fff}.fgrid{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+/* scoped nav logout control (matches .menu a appearance) & login-required modal */
+.menu .bk-nav-logout{background:none;border:0;font:inherit;color:#e6f3ec;padding:.5rem 0;cursor:pointer;text-align:left}
+.menu .bk-nav-logout:hover{color:#fff}
+.bk-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:.75rem}
+.bk-modal-head h2{margin:0}
+.bk-modal-x{background:none;border:1px solid #d5cfc2;color:var(--g9);width:34px;height:34px;border-radius:999px;font-size:1.2rem;line-height:1;cursor:pointer;display:grid;place-items:center;flex-shrink:0;padding:0}
+.bk-modal-x:hover{background:var(--be)}
+.bk-login-modal-msg{color:var(--mu);margin:.25rem 0 1.25rem}
+.bk-login-modal-actions{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+.bk-booking-summary{background:var(--ow);border:1px solid var(--be);border-radius:12px;padding:.8rem 1rem;margin-bottom:1rem;font-size:.92rem}
+.bk-booking-summary p{margin:.2rem 0}

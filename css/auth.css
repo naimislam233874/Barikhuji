@@ -1,0 +1,349 @@
+/* Scoped styles strictly for Barikhuji Login and Registration pages.
+   Never modifies global styles, header, footer, or other pages. */
+
+body.bk-auth-page {
+  overflow-x: hidden;
+}
+
+body.bk-auth-page .bk-auth-main {
+  min-height: calc(100vh - 130px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.25rem, 3.2vw, 2.5rem) 1rem;
+  background: linear-gradient(155deg, #e4ebe5 0%, #edf1eb 52%, #dfe8e1 100%);
+}
+
+.bk-auth-shell {
+  width: min(1020px, 100%);
+  background: var(--ow);
+  border-radius: 22px;
+  box-shadow: 0 22px 54px rgba(15, 62, 46, 0.16);
+  border: 1px solid rgba(15, 62, 46, 0.12);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 860px) {
+  .bk-auth-shell {
+    grid-template-columns: 1.06fr 1fr;
+    min-height: 600px;
+  }
+}
+
+/* Left photo panel (supplied house image + Barikhuji forest-green overlay) */
+.bk-auth-visual {
+  position: relative;
+  min-height: 220px;
+  padding: clamp(1.4rem, 3vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+  color: #ffffff;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(15, 62, 46, 0.62) 0%,
+      rgba(15, 62, 46, 0.22) 45%,
+      rgba(15, 62, 46, 0.9) 100%
+    ),
+    url("../assets/auth-house.jpg") center center / cover no-repeat;
+}
+
+.bk-auth-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: #ffffff;
+  width: fit-content;
+}
+
+.bk-auth-brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--g9);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+}
+
+.bk-auth-brand-text {
+  font: 700 1.35rem Georgia, serif;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.bk-auth-brand-text span {
+  color: #7be0ae;
+}
+
+.bk-auth-copy {
+  max-width: 340px;
+}
+
+.bk-auth-copy h2 {
+  font-family: Georgia, serif;
+  font-size: clamp(1.55rem, 2.5vw, 2.2rem);
+  line-height: 1.16;
+  color: #ffffff;
+  margin: 0 0 0.45rem;
+  text-shadow: 0 2px 14px rgba(10, 35, 25, 0.45);
+}
+
+.bk-auth-copy p {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 10px rgba(10, 35, 25, 0.4);
+}
+
+/* Right form panel */
+.bk-auth-panel {
+  background: var(--ow);
+  padding: clamp(1.5rem, 3.2vw, 2.6rem) clamp(1.25rem, 3.2vw, 2.75rem);
+  display: flex;
+  align-items: center;
+}
+
+.bk-auth-box {
+  width: min(390px, 100%);
+  margin-inline: auto;
+}
+
+.bk-auth-box h1 {
+  font-family: Georgia, serif;
+  color: var(--g9);
+  font-size: clamp(1.55rem, 2.2vw, 1.95rem);
+  margin: 0 0 0.25rem;
+  line-height: 1.2;
+}
+
+.bk-auth-sub {
+  color: var(--mu);
+  font-size: 0.92rem;
+  margin: 0 0 1.15rem;
+  line-height: 1.45;
+}
+
+/* Renter / Landlord role selector */
+.bk-role-label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.86rem;
+  color: var(--tx);
+  margin-bottom: 0.4rem;
+}
+
+.bk-role-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.bk-role-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd7cf;
+  border-radius: 11px;
+  padding: 0.58rem 0.72rem;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s, background-color 0.18s, box-shadow 0.18s;
+  font-family: inherit;
+}
+
+.bk-role-btn:hover {
+  border-color: var(--em);
+}
+
+.bk-role-btn strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--g9);
+  line-height: 1.25;
+}
+
+.bk-role-btn small {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--mu);
+  line-height: 1.25;
+  margin-top: 0.12rem;
+}
+
+.bk-role-btn[aria-checked="true"] {
+  background: #e5f5ec;
+  border-color: var(--g7);
+  box-shadow: 0 2px 10px rgba(15, 62, 46, 0.1);
+}
+
+.bk-role-btn[aria-checked="true"] strong {
+  color: var(--g9);
+}
+
+/* Form fields inside auth panel */
+.bk-auth-panel .field {
+  margin-bottom: 0.78rem;
+}
+
+.bk-auth-panel .field label {
+  font-size: 0.87rem;
+  color: var(--tx);
+}
+
+.bk-auth-panel .field input[type="text"],
+.bk-auth-panel .field input[type="email"],
+.bk-auth-panel .field input[type="tel"],
+.bk-auth-panel .field input[type="password"] {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6rem 0.82rem;
+  border: 1px solid #c6cfc8;
+  border-radius: 10px;
+  background: #ffffff;
+  font: inherit;
+  color: var(--tx);
+  transition: border-color 0.16s, box-shadow 0.16s;
+}
+
+.bk-auth-panel .field input:focus {
+  outline: none;
+  border-color: var(--em);
+  box-shadow: 0 0 0 3px rgba(31, 157, 106, 0.16);
+}
+
+.bk-auth-panel .field.invalid input {
+  border-color: #b3261e;
+}
+
+.bk-pw-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.bk-pw-wrap input {
+  padding-right: 2.85rem !important;
+}
+
+.bk-pw-toggle {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--mu);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.bk-pw-toggle:hover {
+  color: var(--g9);
+  background: rgba(15, 62, 46, 0.06);
+}
+
+.bk-auth-terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-weight: 400 !important;
+  font-size: 0.85rem !important;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.bk-auth-terms input[type="checkbox"] {
+  margin-top: 0.22rem;
+  accent-color: var(--g7);
+  flex-shrink: 0;
+}
+
+.bk-auth-panel .bk-auth-submit {
+  width: 100%;
+  border-radius: 10px;
+  padding: 0.78rem 1.2rem;
+  font-size: 0.98rem;
+  font-weight: 600;
+  background: var(--em);
+  color: #ffffff;
+  border: 0;
+  cursor: pointer;
+  margin-top: 0.35rem;
+  transition: background-color 0.18s, transform 0.18s;
+}
+
+.bk-auth-panel .bk-auth-submit:hover {
+  background: var(--g7);
+  transform: translateY(-1px);
+}
+
+.bk-auth-panel .bk-auth-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.bk-auth-switch {
+  text-align: center;
+  margin: 1.1rem 0 0;
+  font-size: 0.9rem;
+  color: var(--mu);
+}
+
+.bk-auth-switch-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--g7);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bk-auth-switch-btn:hover {
+  color: var(--g9);
+}
+
+@media (max-width: 859px) {
+  .bk-auth-visual {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(15, 62, 46, 0.78) 0%,
+        rgba(15, 62, 46, 0.36) 45%,
+        rgba(15, 62, 46, 0.9) 100%
+      ),
+      url("../assets/auth-house.jpg") center center / cover no-repeat;
+  }
+}
+
+@media (max-width: 520px) {
+  body.bk-auth-page .bk-auth-main {
+    padding: 0.85rem;
+    align-items: flex-start;
+  }
+
+  .bk-auth-shell {
+    border-radius: 18px;
+  }
+
+  .bk-auth-visual {
+    min-height: 195px;
+    gap: 1.5rem;
+  }
+}

@@ -23,7 +23,7 @@ const propertySchema = new mongoose.Schema({
   landlord: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, immutable: true, index: true },
 
   title: { type: String, required: [true, "Title is required."], trim: true, minlength: [C.LIMITS.title[0], "Title is too short."], maxlength: [C.LIMITS.title[1], "Title is too long."] },
-  description: { type: String, required: [true, "Description is required."], trim: true, minlength: [C.LIMITS.description[0], "Description is too short."], maxlength: [C.LIMITS.description[1], "Description is too long."] },
+  description: { type: String, required: [true, "Description is required."], trim: true },
   type: { type: String, required: true, enum: { values: C.PROPERTY_TYPES, message: "Invalid property type." } },
   furnished: { type: String, required: true, enum: { values: C.FURNISHED, message: "Invalid furnished status." } },
 

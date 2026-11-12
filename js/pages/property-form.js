@@ -1,4 +1,16 @@
 (async () => {
+  if (!window.BK_CONFIG?.USE_SAMPLE_DATA && window.BK?.getCurrentUser) {
+    const user = await BK.getCurrentUser(true);
+    if (!user) {
+      location.replace(`../login.html?next=${encodeURIComponent(location.pathname + location.search)}&role=landlord`);
+      return;
+    }
+    if (user.role !== "landlord") {
+      const home = user.role === "admin" ? "../admin/dashboard.html" : "../dashboard.html";
+      location.replace(home);
+      return;
+    }
+  }
   const form = document.getElementById("pform");
   const status = document.getElementById("form-status");
   const previewEl = document.getElementById("image-preview");
